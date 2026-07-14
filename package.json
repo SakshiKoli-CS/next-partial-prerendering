@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "type-check": "tsc --noEmit",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint .",
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start"
@@ -13,19 +13,19 @@
     "date-fns": "3.6.0",
     "dinero.js": "2.0.0-alpha.8",
     "geist": "1.3.1",
-    "next": "15.6.0-canary.60",
-    "react": "19.0.0-rc-8b08e99e-20240713",
-    "react-dom": "19.0.0-rc-8b08e99e-20240713"
+    "next": "16.2.10",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "0.5.7",
     "@tailwindcss/typography": "0.5.13",
     "@types/node": "20.14.10",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "autoprefixer": "10.4.19",
-    "eslint": "8.57.1",
-    "eslint-config-next": "15.6.0-canary.58",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "16.2.10",
     "postcss": "8.4.39",
     "tailwindcss": "3.4.5",
     "typescript": "5.5.3"
