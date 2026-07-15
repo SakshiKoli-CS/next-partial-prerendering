@@ -2,15 +2,17 @@ import { Suspense } from 'react';
 import { cacheTag } from 'next/cache';
 import type { Product } from '#/types/product';
 
-async function getProduct(id: string): Promise<Product & { cachedAt: string }> {
+async function getProduct(
+  id: string
+): Promise<(Product & { cachedAt: string }) | null> {
   'use cache';
   cacheTag(`product-${id}`);
 
-  const product: Product = await fetch(
+  const product: Product | null = await fetch(
     `https://app-router-api.vercel.app/api/products?id=${id}`
   ).then((res) => res.json());
 
-  return { ...product, cachedAt: new Date().toISOString() };
+  return product ? { ...product, cachedAt: new Date().toISOString() } : null;
 }
 
 export async function generateStaticParams() {
@@ -24,6 +26,14 @@ export default async function ProductPage({
 }) {
   const { id } = await params;
   const product = await getProduct(id);
+
+  if (!product) {
+    return (
+      <div className="text-sm text-gray-400">
+        No product found for id &quot;{id}&quot;.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 text-white">
@@ -44,10 +54,14 @@ export default async function ProductPage({
 }
 
 async function LiveStock({ id }: { id: string }) {
-  const data: Product = await fetch(
+  const data: Product | null = await fetch(
     `https://app-router-api.vercel.app/api/products?id=${id}&filter=stock`,
     { cache: 'no-store' }
   ).then((res) => res.json());
+
+  if (!data) {
+    return null;
+  }
 
   return (
     <div className="text-sm text-gray-300">
