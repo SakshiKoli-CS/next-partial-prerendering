@@ -1,11 +1,12 @@
 import { Suspense } from 'react';
-import { cacheTag } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import type { Product } from '#/types/product';
 
 async function getProduct(
   id: string
 ): Promise<(Product & { cachedAt: string }) | null> {
   'use cache';
+  cacheLife('minutes');
   cacheTag(`product-${id}`);
 
   const product: Product | null = await fetch(
@@ -21,8 +22,10 @@ export async function generateStaticParams() {
 
 export default async function ProductPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ simulateError?: string }>;
 }) {
   const { id } = await params;
   const product = await getProduct(id);
@@ -49,8 +52,31 @@ export default async function ProductPage({
       <Suspense fallback={<div className="text-sm text-gray-500">Loading live stock…</div>}>
         <LiveStock id={id} />
       </Suspense>
+
+      <Suspense fallback={<div className="text-sm text-gray-500">Loading flaky section…</div>}>
+        <FlakySection searchParams={searchParams} />
+      </Suspense>
     </div>
   );
+}
+
+async function FlakySection({
+  searchParams,
+}: {
+  searchParams: Promise<{ simulateError?: string }>;
+}) {
+  // Visit /products/1?simulateError=true to trigger this — proves an
+  // error inside one streamed Suspense boundary doesn't take down the
+  // static shell or the other streamed sections on the page. searchParams
+  // is read here, inside the Suspense boundary, rather than in the page
+  // body — reading it there would make the whole route dynamic.
+  const { simulateError } = await searchParams;
+
+  if (simulateError === 'true') {
+    throw new Error('Simulated error for PPR error-boundary test');
+  }
+
+  return <div className="text-sm text-gray-300">Flaky section OK</div>;
 }
 
 async function LiveStock({ id }: { id: string }) {
