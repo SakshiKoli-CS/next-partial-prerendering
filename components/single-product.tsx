@@ -5,6 +5,7 @@ import Image from "next/image";
 
 async function getProduct(): Promise<Product> {
   'use cache';
+  console.log('[cache-miss] single-product getProduct() executing');
   return fetch(`https://app-router-api.vercel.app/api/products?id=1`).then(
     (res) => res.json()
   );

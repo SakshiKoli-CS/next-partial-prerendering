@@ -5,6 +5,7 @@ async function getCategory(id: string) {
   'use cache';
   cacheLife('hours');
   cacheTag(`category-${id}`);
+  console.log(`[cache-miss] products/[id] layout getCategory(${id}) executing`);
 
   return { cachedAt: new Date().toISOString() };
 }

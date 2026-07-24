@@ -8,6 +8,7 @@ async function getProduct(
   'use cache';
   cacheLife('minutes');
   cacheTag(`product-${id}`);
+  console.log(`[cache-miss] products/[id] getProduct(${id}) executing`);
 
   const product: Product | null = await fetch(
     `https://app-router-api.vercel.app/api/products?id=${id}`

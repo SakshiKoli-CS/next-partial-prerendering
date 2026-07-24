@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
   }
 
   revalidateTag(tag, 'max');
+  console.log(`[revalidate] tag="${tag}" at ${new Date().toISOString()}`);
 
   return NextResponse.json({ revalidated: true, tag });
 }

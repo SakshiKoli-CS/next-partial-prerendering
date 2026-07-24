@@ -33,5 +33,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# contentstack launch CLI
+.cs-launch.json
+/logs/
+*.zip
+
 # typescript
 *.tsbuildinfo
